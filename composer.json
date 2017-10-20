@@ -1,0 +1,34 @@
+{
+    "name": "kdaviesnz/chemreactions",
+    "description": "Simulates chemical reactions",
+    "keywords": [
+        "kdaviesnz",
+        "chemistry",
+        "chemreactions"
+    ],
+    "homepage": "https://github.com/kdaviesnz/chemreactions",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "kdavies",
+            "email": "kdaviesnz@gmail.com",
+            "homepage": "https://github.com/kdaviesnz/chemreactions",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "~7.0",
+        "kdaviesnz/molecule": "dev-master",
+        "kdaviesnz/atom": "dev-master",
+        "kdaviesnz/matter": "v0.0.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : ">=5.4.3",
+        "squizlabs/php_codesniffer": "^2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "kdaviesnz\\chemreactions\\": "src"
+        }
+    }
+}
