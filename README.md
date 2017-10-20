@@ -36,6 +36,20 @@ $ composer require kdaviesnz/atom
 ## Usage
 
 ``` php
+$Na = new \kdaviesnz\atom\Atom("2Na");
+        $Cl = new \kdaviesnz\atom\Atom("Cl2");
+
+        var_dump($Na->getValence());
+        var_dump($Cl->getValence());
+
+        // 2Na(s)  +  Cl2(g)  ——>  2NaCl(s)
+        $r = new \kdaviesnz\reactions\Reaction();
+        $reactionStep = new \kdaviesnz\reactions\Combination($Na, $Cl);
+        $r->addStep($reactionStep);
+        $r->addProduct($reactionStep->getProduct());
+
+        var_dump($Na->getValence());
+        var_dump($Cl->getValence());
 
 ```
 
