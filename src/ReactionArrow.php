@@ -21,8 +21,13 @@ class ReactionArrow implements IReactionArrow
      * @param $electronSink
      * @param $electronSource
      */
-    public function __construct(IAtom $electronSink, IAtom $electronSource)
+    public function __construct($electronSink, $electronSource)
     {
+        if (!in_array(get_class($electronSink), array("kdaviesnz\atom\Halogen", "kdaviesnz\atom\Atom", "kdaviesnz\atom\Bond"))
+            && !in_array(get_class($electronSource), array("kdaviesnz\atom\Halogen", "kdaviesnz\atom\Atom", "kdaviesnz\atom\Bond"))) {
+            throw new \Exception("Wrong parameter type for ReactionArrow - " . get_class($electronSink) . " " . get_class($electronSource));
+        }
+
         $this->electronSink = $electronSink;
         $this->electronSource = $electronSource;
     }

@@ -20,8 +20,8 @@ class Combination extends ReactionStep implements ICombination
         parent::__construct($firstAtom, $secondAtom);
 
         // Add bond to atoms
-        $bond = new Bond($secondAtom);
-        $recipBond = new Bond($firstAtom);
+        $bond = new Bond($secondAtom, uniqid());
+        $recipBond = new Bond($firstAtom, uniqid());
         $firstAtom->addBond($bond);
         $secondAtom->addBond($recipBond);
 

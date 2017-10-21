@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace kdaviesnz\reactions;
 
+use kdaviesnz\molecule\IAlkene;
+use kdaviesnz\molecule\IHydrogenHalide;
+
 class ElectrophilicAddition extends Reaction implements IElectrophilicAddition
 {
 
@@ -11,16 +14,12 @@ class ElectrophilicAddition extends Reaction implements IElectrophilicAddition
      * ElectrophilicAddition constructor.
      */
     public function __construct(
-        IMolecule &$alkene,
-        IMolecule &$hydrogenHalide,
-        IAtom &$alkeneCarbonCarbonBondAtom,
-        IAtom &$hydrogenHalideHydrogenAtom,
-        IBond $alkeneCarbonCarbonBond,
-        IAtom &$hydrogenHalideHalogenAtom,
-        IBond $hydrohalogenBond
+        IAlkene $alkene,
+        IHydrogenHalide $hydrogenHalide
     )
     {
         /*
+
          $reaction = new ElectrophilicAddition(
         $alkene,
         $hydrogenHalide,
@@ -47,13 +46,30 @@ class ElectrophilicAddition extends Reaction implements IElectrophilicAddition
          */
         // Add arrow from the alkene C==C double bond to the hydrogen atom of the hydrohalide.
         // Comb into one Ionization call -> should set Ionization->product to ICarbonate
-        $ionizationReaction = $this->addStep(new Ionization($alkene, $hydrogenHalide, $alkeneCarbonCarbonBondAtom, $hydrogenHalideHydrogenAtom, $hydrogenHalideHalogenAtom, $alkeneCarbonCarbonBond,$hydrohalogenBond));
+        $alkeneCarbonCarbonBondAtom = $alkene->carbonAtomWithDoubleBond;
+        $hydrogenHalideHydrogenAtom = $hydrogenHalide->hydrogenAtom;
+        $hydrogenHalideHalogenAtom = $hydrogenHalide->halogenAtom;
+        $hydrohalogenBonds = $hydrogenHalideHalogenAtom->getBonds();
+        $hydrohalogenBond = $hydrohalogenBonds[0];
+        $alkeneCarbonCarbonBond = $alkene->doubleBond;
+
+        $ionizationReactionStep = new Ionization(
+                $alkene,
+                $hydrogenHalide,
+                $alkeneCarbonCarbonBondAtom,
+                $hydrogenHalideHydrogenAtom,
+                $hydrogenHalideHalogenAtom,
+                $alkeneCarbonCarbonBond,
+                $hydrohalogenBond
+        );
+
+        $this->addStep($ionizationReactionStep);
 
         // Add arrow from the halogen atom to the carbon atom of what was the C==C double bond (now single bond).
-        $lastStep = new ReactionStep($hydrogenHalide,$ionizationReaction->product);
+        $lastStep = new ReactionStep($hydrogenHalide,$ionizationReactionStep->getProduct());
         $lastStep->addReactionArrow(new ReactionArrow($hydrogenHalideHalogenAtom, $alkeneCarbonCarbonBondAtom));
-        $hydrogenHalideHalogenAtom--;
-        $alkeneCarbonCarbonBondAtom++;
+        $hydrogenHalideHalogenAtom->decrementValence();
+        $alkeneCarbonCarbonBondAtom->incrementValence();
 
       //  $this->product = $lastStep->product;
 

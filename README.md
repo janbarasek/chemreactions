@@ -36,21 +36,45 @@ $ composer require kdaviesnz/atom
 ## Usage
 
 ``` php
-$Na = new \kdaviesnz\atom\Atom("2Na");
+        $Na = new \kdaviesnz\atom\Atom("2Na");
         $Cl = new \kdaviesnz\atom\Atom("Cl2");
 
         var_dump($Na->getValence());
         var_dump($Cl->getValence());
 
         // 2Na(s)  +  Cl2(g)  ——>  2NaCl(s)
-        $r = new \kdaviesnz\reactions\Reaction();
+        $r1 = new \kdaviesnz\reactions\Reaction();
         $reactionStep = new \kdaviesnz\reactions\Combination($Na, $Cl);
-        $r->addStep($reactionStep);
-        $r->addProduct($reactionStep->getProduct());
+        $r1->addStep($reactionStep);
+        $r1->addProduct($reactionStep->getProduct());
 
         var_dump($Na->getValence());
         var_dump($Cl->getValence());
 
+        // Electrophilic addition / Ionization
+        $CarbonMethylAtom1 = new \kdaviesnz\atom\Atom("C");
+        $hydrogenMethylAtom1 = new \kdaviesnz\atom\Atom("H3");
+        $CarbonMethylAtom1->addBond(new \kdaviesnz\atom\Bond($hydrogenMethylAtom1, "carbonmethlybond1"));
+        $hydrogenMethylAtom1->addBond(new \kdaviesnz\atom\Bond($CarbonMethylAtom1, "carbonmethlybond1"));
+        $carbonMethylAtom2 = new \kdaviesnz\atom\Atom("C");
+        $hydrogenMethylAtom2 = new \kdaviesnz\atom\Atom("H3");
+        $carbonMethylAtom2->addBond(new \kdaviesnz\atom\Bond($hydrogenMethylAtom2, "carbonmethlybond2"));
+        $hydrogenMethylAtom2->addBond(new \kdaviesnz\atom\Bond($carbonMethylAtom2, "carbonmethlybond2"));
+        $carbonDoubleBondAtom1 = new \kdaviesnz\atom\Atom("C");
+        $carbonDoubleBondAtom2 = new \kdaviesnz\atom\Atom("C");
+        $hydrogenCarbonDoubleBondAtom1 = new \kdaviesnz\atom\Atom("H");
+        $hydrogenCarbonDoubleBondAtom2 = new \kdaviesnz\atom\Atom("H");
+        $carbonDoubleBondAtom1->addBond(new \kdaviesnz\atom\Bond($hydrogenCarbonDoubleBondAtom1, "carbonhydrogenbond"));
+        $hydrogenCarbonDoubleBondAtom1->addBond(new \kdaviesnz\atom\Bond($carbonDoubleBondAtom1, "carbonhydrogenbond"));
+        $carbonDoubleBondAtom2->addBond(new \kdaviesnz\atom\Bond($hydrogenCarbonDoubleBondAtom2, "carbonhydrogenbond"));
+        $hydrogenCarbonDoubleBondAtom2->addBond(new \kdaviesnz\atom\Bond($carbonDoubleBondAtom2, "carbonhydrogenbond"));
+        $carbonDoubleBondAtom1->addBond(new \kdaviesnz\atom\Bond($carbonDoubleBondAtom2, "alkenedoublebond", "double" ));
+        $carbonDoubleBondAtom2->addBond(new \kdaviesnz\atom\Bond($carbonDoubleBondAtom1,"alkenedoublebond", "double"));
+
+        $r2 = new \kdaviesnz\reactions\ElectrophilicAddition(
+            new \kdaviesnz\molecule\Alkene($CarbonMethylAtom1, $hydrogenMethylAtom1, $carbonMethylAtom2, $hydrogenMethylAtom2, $carbonDoubleBondAtom1, $carbonDoubleBondAtom2, $hydrogenCarbonDoubleBondAtom1, $hydrogenCarbonDoubleBondAtom2),
+            new \kdaviesnz\molecule\HydrogenHalide(new \kdaviesnz\atom\Halogen("Br"))
+        );
 ```
 
 ## Change log

@@ -3,19 +3,26 @@ declare(strict_types=1);
 
 namespace kdaviesnz\reactions;
 
+use kdaviesnz\atom\IAtom;
+use kdaviesnz\atom\IBond;
+use kdaviesnz\molecule\Carbocation;
+use kdaviesnz\molecule\IAlkene;
+use kdaviesnz\molecule\IHydrogenHalide;
+use kdaviesnz\molecule\IMolecule;
+
 class Ionization extends ReactionStep implements IIonization
 {
 
-    private $product; // ICarbocation
     /**
      * Ionization constructor.
      */
-    public function __construct(IMolecule &$alkene, IMolecule &$hydrogenHalide, IAtom &$alkeneCarbonCarbonBondAtom, IAtom &$hydrogenHalideHydrogenAtom, IAtom &$hydrogenHalideHalogenAtom, IBond &$alkeneCarbonCarbonBond, IBond &$hydrohalogenBond)
+    public function __construct(IAlkene &$alkene, IHydrogenHalide &$hydrogenHalide, IAtom &$alkeneCarbonCarbonBondAtom, IAtom &$hydrogenHalideHydrogenAtom, IAtom &$hydrogenHalideHalogenAtom, IBond &$alkeneCarbonCarbonBond, IBond &$hydrohalogenBond)
     {
+
         /*
          Step 1:
          $firstReactant == the alkene
-         $secondRectant == the hydrohalogen
+         $secondRectant == the $hydrogenHalide
          $secondReactantAtom == hydrogen atom of the hydrohalogen
          $firstReactantAtom == carbon atom of the aklene C==C double bond.
          $electronSource == the alkene C==C double bond.
@@ -33,16 +40,19 @@ class Ionization extends ReactionStep implements IIonization
 
         // Step 1: Add arrow from the alkene double bond to the hydrohalogen hydrogen atom.
         parent::addReactionArrow(new ReactionArrow($alkeneCarbonCarbonBond, $hydrogenHalideHydrogenAtom));
-        $alkeneCarbonCarbonBondAtom->valence--; // Ionize
-        $hydrogenHalideHydrogenAtom->valence++;
+        $alkeneCarbonCarbonBondAtom->decrementValence(); // Ionize
+        $hydrogenHalideHydrogenAtom->incrementValence();
 
         $alkeneCarbonCarbonBond->bondType = "single";
 
         // Step 2: Add arrow from halgogen bond to the halogen atom of the hydrohalogen.
         parent::addReactionArrow(new ReactionArrow($hydrohalogenBond, $hydrogenHalideHalogenAtom));
-        $hydrogenHalide->removeBond($hydrohalogenBond);
 
-        $this->product = new Carbocation($alkene);
+        // Remove hydrogen halide bond
+        $hydrogenHalideHalogenAtom->removeBond($hydrohalogenBond);
+        $hydrogenHalideHydrogenAtom->removeBond($hydrohalogenBond);
+
+        $this->product = new Carbocation(...$alkene->getAtoms());
 
     }
 
