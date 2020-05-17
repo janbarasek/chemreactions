@@ -13,33 +13,34 @@ require_once("src/Reaction.php");
 
 class ReactionTest extends PHPUnit_Framework_TestCase
 {
+	public function setUp()
+	{
 
-    public function setUp()
-    {
+	}
 
-    }
 
-    public function tearDown()
-    {
+	public function tearDown()
+	{
 
-    }
+	}
 
-    public function testReaction()
-    {
-        $Na = new \kdaviesnz\atom\Atom("2Na");
-        $Cl = new \kdaviesnz\atom\Atom("Cl2");
 
-        var_dump($Na->getValence());
-        var_dump($Cl->getValence());
+	public function testReaction()
+	{
+		$Na = new \kdaviesnz\atom\Atom("2Na");
+		$Cl = new \kdaviesnz\atom\Atom("Cl2");
 
-        // 2Na(s)  +  Cl2(g)  ——>  2NaCl(s)
-        $r = new \kdaviesnz\reactions\Reaction();
-        $reactionStep = new \kdaviesnz\reactions\Combination($Na, $Cl);
-        $r->addStep($reactionStep);
-        $r->addProduct($reactionStep->getProduct());
+		var_dump($Na->getValence());
+		var_dump($Cl->getValence());
 
-        var_dump($Na->getValence());
-        var_dump($Cl->getValence());
+		// 2Na(s)  +  Cl2(g)  ——>  2NaCl(s)
+		$r = new \kdaviesnz\reactions\Reaction();
+		$reactionStep = new \kdaviesnz\reactions\Combination($Na, $Cl);
+		$r->addStep($reactionStep);
+		$r->addProduct($reactionStep->getProduct());
 
-    }
+		var_dump($Na->getValence());
+		var_dump($Cl->getValence());
+
+	}
 }

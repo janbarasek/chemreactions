@@ -1,23 +1,30 @@
 <?php
-declare(strict_types=1); // must be first line
+
+declare(strict_types=1);
 
 namespace kdaviesnz\reactions;
+
 
 use kdaviesnz\molecule\IMolecule;
 
 class Reaction implements IReaction
 {
-    private $reactionSteps = array(); // array of IReactionSteps.
-    private $products = array(); // array of IMolecule
 
-    public function addStep(IReactionStep $reactionStep)
-    {
-        $this->reactionSteps[] = $reactionStep;
-    }
+	/** @var IReactionSteps[] */
+	private $reactionSteps = [];
 
-    public function addProduct(IMolecule $product)
-    {
-        $this->products[] = $product;
-    }
+	/** @var IMolecule[] */
+	private $products = [];
 
+
+	public function addStep(IReactionStep $reactionStep)
+	{
+		$this->reactionSteps[] = $reactionStep;
+	}
+
+
+	public function addProduct(IMolecule $product)
+	{
+		$this->products[] = $product;
+	}
 }
